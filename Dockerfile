@@ -1,8 +1,8 @@
 FROM ubuntu:16.04
 
-LABEL maintainer "kunze@earthlinginteractive.com"
+LABEL maintainer="kunze@earthlinginteractive.com"
 
-RUN apt-get update && apt-get install -y python-software-properties wget curl git zip vim netcat supervisor cron rsyslog apache2 php libapache2-mod-php php-pgsql php-dom php-simplexml php-curl php-intl php-xsl php-mbstring php-zip php-xml composer php-gd php-mcrypt php-redis && a2enmod rewrite remoteip;
+RUN apt-get update && apt-get install -y python-software-properties wget curl git zip vim netcat supervisor cron rsyslog apache2 php libapache2-mod-php php-pgsql php-dom php-simplexml php-curl php-intl php-xsl php-mbstring php-zip php-xml php-json composer php-gd php-mcrypt php-redis && a2enmod rewrite remoteip;
 
 ADD vhost /etc/apache2/sites-enabled/000-default.conf
 ADD httpd-foreground /bin/httpd-foreground

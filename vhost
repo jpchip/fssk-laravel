@@ -1,10 +1,10 @@
 <VirtualHost *:80>
-    DocumentRoot /var/www/fssk-laravel/public
+    DocumentRoot /var/www/server/public
 
     ErrorLog  /dev/stdout
     CustomLog /dev/stdout combined
 
-    <Directory /var/www/fssk-laravel/public>
+    <Directory /var/www/server/public>
         Options all
         allow from all
         AllowOverride All
