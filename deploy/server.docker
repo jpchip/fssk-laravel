@@ -1,0 +1,20 @@
+FROM php:7.0.27-apache-jessie
+
+LABEL maintainer="kunze@earthlinginteractive.com"
+
+COPY ./deploy/php.ini /usr/local/etc/php/
+
+RUN apt-get update && apt-get install -y wget postgresql postgresql-contrib libmcrypt-dev libpq-dev \
+    && docker-php-ext-install -j$(nproc) mcrypt pdo pdo_pgsql
+
+COPY ./deploy/vhost /etc/apache2/sites-enabled/000-default.conf
+COPY ./deploy/entrypoint.sh /entrypoint.sh
+
+RUN wget -q 'https://getcomposer.org/installer' -O - | php; \
+    mv composer.phar /usr/local/bin/composer;
+
+ENV COMPOSER_ALLOW_SUPERUSER 1
+
+EXPOSE 80
+
+CMD ["apache2-foreground"]

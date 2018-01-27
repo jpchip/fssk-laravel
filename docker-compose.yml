@@ -1,26 +1,28 @@
 version: '2'
 services:
-  laravel-www:
-    build: .
-    hostname: 'laravel-www'
-    container_name: 'laravel-www'
+  server:
+    build:
+      context: ./
+      dockerfile: deploy/server.docker
+    hostname: 'server'
+    container_name: 'server'
     entrypoint: /entrypoint.sh
-    command: ["httpd-foreground"]
+    command: 'apache2-foreground'
     ports:
       - '80:80'
     volumes:
       - './:/var/www'
-      - './entrypoint.sh:/entrypoint.sh'
-      - './php.ini:/etc/php/7.0/apache2/php.ini'
+      - './deploy/entrypoint.sh:/entrypoint.sh'
+      - './deploy/php.ini:/usr/local/etc/php/php.ini'
     depends_on:
-      - laravel-postgres
+      - db
     working_dir: '/var/www'
     links:
-      - 'laravel-postgres:laravel-postgres'
+      - 'db:db'
     networks:
       - app
 
-  laravel-postgres:
+  db:
     environment:
       - POSTGRES_USER=root
       - POSTGRES_DATABASE=test
@@ -28,7 +30,7 @@ services:
       - POSTGRES_HOST=localhost
       - POSTGRES_PORT=5432
     image: 'postgres:9.6'
-    container_name: 'laravel-postgres'
+    container_name: 'db'
     ports:
       - '5432:5432'
     volumes:
@@ -40,5 +42,5 @@ networks:
     driver: bridge
 
 volumes:
-  laravel-postgres-data:
-  laravel-www-data:
+  db-data:
+  server-data:

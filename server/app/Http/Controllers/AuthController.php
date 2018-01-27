@@ -21,11 +21,9 @@ class AuthController extends Controller
 		]);
 
 		$input = $request->all();
-		print_r($input);die;
 
 		if (Auth::attempt(['email' => $input['email'], 'password' => $input['password']])) {
 			// Authentication passed...
-			return response()->json(Auth::user());
 		}
 	}
 
