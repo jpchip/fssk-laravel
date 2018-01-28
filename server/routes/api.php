@@ -17,6 +17,13 @@ Route::post('/auth', 'AuthController@index');
 
 Route::delete('/auth', 'AuthController@logout');
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')->group(function () {
+
+	Route::get('/user', function (Request $request) {
+		return Auth::user();
+	});
+
+	Route::apiResource('users', 'UserController');
+	Route::apiResource('todos', 'TodoController');
+
 });

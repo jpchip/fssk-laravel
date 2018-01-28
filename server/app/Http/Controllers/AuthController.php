@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Validator;
 
 class AuthController extends Controller
 {
@@ -15,16 +16,21 @@ class AuthController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$validatedData = $request->validate([
+		$input = $request->all();
+		$validator = Validator::make($input, [
 			'email' => 'required',
 			'password' => 'required',
 		]);
-
-		$input = $request->all();
-
-		if (Auth::attempt(['email' => $input['email'], 'password' => $input['password']])) {
-			// Authentication passed...
+		if ($validator->fails()) {
+			return response()->json(['error' => 'missing required field.'], 400);
 		}
+
+
+		if (Auth::guard('api')->attempt(['email' => $input['email'], 'password' => $input['password']])) {
+			return response()->json(Auth::guard('api')->user());
+		}
+
+		return response()->json(['error' => 'log in failed.'], 401);
 	}
 
 	/**
@@ -34,6 +40,6 @@ class AuthController extends Controller
 	 */
 	public function logout(Request $request)
 	{
-
+		Auth::guard('api')->logout();
 	}
 }
