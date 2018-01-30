@@ -9,7 +9,7 @@ services:
     entrypoint: /entrypoint.sh
     command: 'apache2-foreground'
     ports:
-      - '80:80'
+      - '4000:80'
     volumes:
       - './:/var/www'
       - './deploy/entrypoint.sh:/entrypoint.sh'
@@ -21,7 +21,20 @@ services:
       - 'db:db'
     networks:
       - app
-
+  client:
+    build:
+      context: ./
+      dockerfile: deploy/client.docker
+    hostname: 'client'
+    container_name: 'client'
+    command: 'npm start'
+    ports:
+      - '3000:3000'
+    volumes:
+      - './client:/opt/src'
+    working_dir: '/opt/src'
+    networks:
+      - app
   db:
     environment:
       - POSTGRES_USER=root
@@ -37,7 +50,6 @@ services:
       - './server/database/initdb.sh:/docker-entrypoint-initdb.d/initdb.sh'
     networks:
       - app
-
 
 networks:
   app:
