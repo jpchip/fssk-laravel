@@ -20,7 +20,7 @@ Route::delete('/auth', 'AuthController@logout');
 Route::middleware('auth:api')->group(function () {
 
 	Route::get('/user', function (Request $request) {
-		return Auth::user();
+		return Auth::guard('api')->user();
 	});
 
 	Route::apiResource('users', 'UserController');
