@@ -6,6 +6,8 @@ Trying Laravel for server
 
 ## Installing / Getting started
 
+Copy `server/.env.example` to `server/.env` and `client/.env.example` to `client/.env`
+
 Run the following:
 
 ```shell

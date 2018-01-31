@@ -15,13 +15,13 @@ class CreateTodosTable extends Migration
 	{
 		Schema::create('todos', function (Blueprint $table) {
 			$table->uuid('id')->default(DB::raw('uuid_generate_v4()'));
-			//$table->primary('id');
+			$table->primary('id');
 
 			$table->uuid('user_id');
 			$table->foreign('user_id')->references('id')->on('users');
 
 			$table->string('title');
-			$table->tinyInteger('order', true);
+			$table->tinyInteger('order');
 			$table->boolean('completed');
 			$table->timestamps();
 		});

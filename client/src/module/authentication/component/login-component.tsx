@@ -40,7 +40,7 @@ export default class LoginComponent extends React.Component<ILoginComponentProps
 			<div className="dsk-Admin-form login">
 				<div className="dsk-AdminLogin__content">
 					<div className="dsk-Admin-form__title">
-						Application Log In
+						Application Log In!
 					</div>
 					<img src={logo} />
 					<form onSubmit={this.onSubmit}>

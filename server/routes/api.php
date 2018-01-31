@@ -13,15 +13,14 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('/auth', 'AuthController@index');
-
+Route::get('/auth', 'AuthController@index');
+Route::post('/auth', 'AuthController@login');
 Route::delete('/auth', 'AuthController@logout');
 
+//must be logged in to get to these routes
 Route::middleware('auth:api')->group(function () {
 
-	Route::get('/auth', function (Request $request) {
-		return Auth::guard('api')->user();
-	});
+	Route::get('users/{user}/todos', 'UserController@showTodos');
 
 	Route::apiResource('users', 'UserController');
 	Route::apiResource('todos', 'TodoController');

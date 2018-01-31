@@ -1,13 +1,10 @@
 from node:8.9.4
 
 WORKDIR /opt/src
+COPY ./client .
 
-COPY ./client/package.json ./client/package-lock.json /opt/src/
-
-RUN npm install
-
-COPY ./client /opt/src/
+ENV CHOKIDAR_USEPOLLING true
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["npm", "install"]

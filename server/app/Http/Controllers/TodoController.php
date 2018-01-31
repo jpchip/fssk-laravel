@@ -11,7 +11,8 @@ use Illuminate\Validation\Rule;
 class TodoController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Returns all todos if current user is admin, otherwise
+	 * just list of todos the current user has ownership of.
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
@@ -25,8 +26,7 @@ class TodoController extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
-	 *
+	 * Creates new Todo
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
@@ -46,19 +46,17 @@ class TodoController extends Controller
 	}
 
 	/**
-	 * Display the specified resource.
-	 *
+	 * Returns single Todo
 	 * @param  \App\Todo  $todo
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show(Todo $todo)
 	{
-		return $todo;
+		return response()->json($todo);
 	}
 
 	/**
-	 * Update the specified resource in storage.
-	 *
+	 * Updates Todo
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  \App\Todo  $todo
 	 * @return \Illuminate\Http\Response
@@ -71,9 +69,9 @@ class TodoController extends Controller
 	}
 
 	/**
-	 * Remove the specified resource from storage.
-	 *
+	 * Deletes Todo
 	 * @param  \App\Todo  $todo
+	 * @throws \Exception
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy(Todo $todo)

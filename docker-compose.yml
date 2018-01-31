@@ -6,13 +6,13 @@ services:
       dockerfile: deploy/server.docker
     hostname: 'server'
     container_name: 'server'
-    entrypoint: /entrypoint.sh
+    entrypoint: /server-entrypoint.sh
     command: 'apache2-foreground'
     ports:
       - '4000:80'
     volumes:
       - './:/var/www'
-      - './deploy/entrypoint.sh:/entrypoint.sh'
+      - './deploy/server-entrypoint.sh:/server-entrypoint.sh'
       - './deploy/php.ini:/usr/local/etc/php/php.ini'
     depends_on:
       - db

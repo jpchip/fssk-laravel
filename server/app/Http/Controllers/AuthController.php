@@ -10,11 +10,24 @@ class AuthController extends Controller
 {
 
 	/**
-	 * Log in
-	 *
+	 * Return logged in user
+	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index(Request $request)
+	{
+		if (Auth::guard('api')->check()) {
+			return response()->json(["user" => Auth::guard('api')->user()]);
+		}
+		return response()->json(['user' => false], 200);
+	}
+
+	/**
+	 * Log in
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function login(Request $request)
 	{
 		$input = $request->all();
 		$validator = Validator::make($input, [

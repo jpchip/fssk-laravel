@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -30,7 +31,23 @@ class UserController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$user = User::create($request->all());
+		$validator = Validator::make($request->all(), [
+			'name' => 'required|string',
+			'email' => 'required|string|email|max:255|unique:users',
+			'password' => 'required|string|min:10',
+		]);
+
+		if ($validator->fails()) {
+			return response()->json($validator->errors(), 400);
+		}
+
+		$data = $request->all();
+		$user = User::create([
+			'name' => $data['name'],
+			'email' => $data['email'],
+			'password' => bcrypt($data['password']),
+		]);
+
 		return response()->json($user, 201);
 	}
 
@@ -42,7 +59,18 @@ class UserController extends Controller
 	 */
 	public function show(User $user)
 	{
-		return $user;
+		return response()->json($user);
+	}
+
+	/**
+	 * Display the todos associated with resource.
+	 *
+	 * @param  \App\User  $user
+	 * @return \Illuminate\Http\Response
+	 */
+	public function showTodos(User $user)
+	{
+		return $user->todos;
 	}
 
 	/**
@@ -63,11 +91,15 @@ class UserController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  \App\User  $user
+	 * @throws \Exception
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy(User $user)
 	{
-		$user->delete();
-		return response()->json(null, 204);
+		if(Auth::user()->is_admin) {
+			$user->delete();
+			return response()->json(null, 204);
+		}
+		return response()->json(['error' => 'Must be Admin.'], 401);
 	}
 }
