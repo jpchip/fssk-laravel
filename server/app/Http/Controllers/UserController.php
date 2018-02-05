@@ -59,6 +59,12 @@ class UserController extends Controller
 	 */
 	public function show(User $user)
 	{
+		$activeUser = Auth::guard('api')->user();
+		if($user->id != $activeUser->id) {
+			if(!$activeUser->is_admin) {
+				return response()->json(['error' => 'Must be Admin.'], 401);
+			}
+		}
 		return response()->json($user);
 	}
 
@@ -70,7 +76,13 @@ class UserController extends Controller
 	 */
 	public function showTodos(User $user)
 	{
-		return $user->todos;
+		$activeUser = Auth::guard('api')->user();
+		if($user->id != $activeUser->id) {
+			if(!$activeUser->is_admin) {
+				return response()->json(['error' => 'Must be Admin.'], 401);
+			}
+		}
+		return response()->json($user->todos);
 	}
 
 	/**
