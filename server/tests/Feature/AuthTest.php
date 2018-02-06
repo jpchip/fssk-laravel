@@ -10,9 +10,11 @@ class AuthTest extends TestCase
 {
 	use RefreshDatabase;
 
+	protected $baseUrl = '/api/auth';
+
 	public function testIndex()
 	{
-		$response = $this->json('GET', '/api/auth');
+		$response = $this->json('GET', $this->baseUrl);
 
 		$response
 			->assertStatus(200)
@@ -23,16 +25,36 @@ class AuthTest extends TestCase
 	{
 		$user = factory(User::class)->create();
 		$response = $this->actingAs($user, 'api')
-			->json('GET', '/api/auth');
+			->json('GET', $this->baseUrl);
 
 		$response
 			->assertStatus(200)
 			->assertJson(['user' => $user->toArray()]);
 	}
 
+	public function testRegisterWithMissingParams()
+	{
+		$user = factory(User::class)->create();
+		$response = $this->actingAs($user, 'api')
+			->json('POST', $this->baseUrl . '/register');
+
+		$response
+			->assertStatus(400);
+	}
+
+	public function testRegisterWithValidParams()
+	{
+		$user = factory(User::class)->make();
+		$response = $this->json('POST', $this->baseUrl . '/register', ['name' => $user->name, 'email' => $user->email, 'password' => 'secret']);
+
+		$response
+			->assertStatus(201)
+			->assertJson(['user' => ['name' => $user->name, 'email' => $user->email]]);
+	}
+
 	public function testLoginWithMissingParams()
 	{
-		$response = $this->json('POST', '/api/auth');
+		$response = $this->json('POST', $this->baseUrl);
 
 		$response
 			->assertStatus(400)
@@ -41,7 +63,7 @@ class AuthTest extends TestCase
 
 	public function testLoginWithInvalidParams()
 	{
-		$response = $this->json('POST', '/api/auth', ['email' => 'junk@example.com', 'password' => 'junk']);
+		$response = $this->json('POST', $this->baseUrl, ['email' => 'junk@example.com', 'password' => 'junk']);
 
 		$response
 			->assertStatus(401)
@@ -51,7 +73,7 @@ class AuthTest extends TestCase
 	public function testLoginWithValidParams()
 	{
 		$user = factory(User::class)->create();
-		$response = $this->json('POST', '/api/auth', ['email' => $user->email, 'password' => 'secret']);
+		$response = $this->json('POST', $this->baseUrl, ['email' => $user->email, 'password' => 'secret']);
 
 		$this->assertAuthenticated('api');
 
@@ -64,7 +86,7 @@ class AuthTest extends TestCase
 	{
 		$user = factory(User::class)->create();
 		$response = $this->actingAs($user, 'api')
-			->json('DELETE', '/api/auth');
+			->json('DELETE', $this->baseUrl);
 
 		$response
 			->assertStatus(204);

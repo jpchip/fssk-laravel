@@ -11,16 +11,13 @@ class UserController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
-	 *
+	 * @throws \Illuminate\Auth\Access\AuthorizationException
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index()
 	{
-
-		if(Auth::user()->is_admin) {
-			return User::all();
-		}
-		return response()->json(['error' => 'Must be Admin.'], 401);
+		$this->authorize('all', User::class);
+		return User::all();
 	}
 
 	/**
@@ -34,7 +31,7 @@ class UserController extends Controller
 		$validator = Validator::make($request->all(), [
 			'name' => 'required|string',
 			'email' => 'required|string|email|max:255|unique:users',
-			'password' => 'required|string|min:10',
+			'password' => 'required|string',
 		]);
 
 		if ($validator->fails()) {
@@ -55,16 +52,12 @@ class UserController extends Controller
 	 * Display the specified resource.
 	 *
 	 * @param  \App\User  $user
+	 * @throws \Illuminate\Auth\Access\AuthorizationException
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show(User $user)
 	{
-		$activeUser = Auth::guard('api')->user();
-		if($user->id != $activeUser->id) {
-			if(!$activeUser->is_admin) {
-				return response()->json(['error' => 'Must be Admin.'], 401);
-			}
-		}
+		$this->authorize('view', $user);
 		return response()->json($user);
 	}
 
@@ -72,16 +65,12 @@ class UserController extends Controller
 	 * Display the todos associated with resource.
 	 *
 	 * @param  \App\User  $user
+	 * @throws \Illuminate\Auth\Access\AuthorizationException
 	 * @return \Illuminate\Http\Response
 	 */
 	public function showTodos(User $user)
 	{
-		$activeUser = Auth::guard('api')->user();
-		if($user->id != $activeUser->id) {
-			if(!$activeUser->is_admin) {
-				return response()->json(['error' => 'Must be Admin.'], 401);
-			}
-		}
+		$this->authorize('view', $user);
 		return response()->json($user->todos);
 	}
 
@@ -90,12 +79,13 @@ class UserController extends Controller
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  \App\User  $user
+	 * @throws \Illuminate\Auth\Access\AuthorizationException
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(Request $request, User $user)
 	{
+		$this->authorize('update', $user);
 		$user->update($request->all());
-
 		return response()->json($user, 200);
 	}
 
@@ -103,15 +93,14 @@ class UserController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  \App\User  $user
+	 * @throws \Illuminate\Auth\Access\AuthorizationException
 	 * @throws \Exception
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy(User $user)
 	{
-		if(Auth::user()->is_admin) {
-			$user->delete();
-			return response()->json(null, 204);
-		}
-		return response()->json(['error' => 'Must be Admin.'], 401);
+		$this->authorize('delete', $user);
+		$user->delete();
+		return response()->json(null, 204);
 	}
 }

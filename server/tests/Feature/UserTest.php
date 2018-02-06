@@ -12,15 +12,17 @@ class UserTest extends TestCase
 
 	use RefreshDatabase;
 
+	protected $baseUrl = '/api/users';
+
 	public function testIndex()
 	{
 		$user = factory(User::class)->create();
 		$response = $this->actingAs($user, 'api')
-			->json('GET', '/api/users');
+			->json('GET', $this->baseUrl);
 
 		$response
-			->assertStatus(401)
-			->assertJson(['error' => 'Must be Admin.']);
+			->assertStatus(403)
+			->assertJson(['message' => 'This action is unauthorized.']);
 	}
 
 	public function testIndexAsAdmin()
@@ -29,7 +31,7 @@ class UserTest extends TestCase
 			'is_admin' => true,
 		]);
 		$response = $this->actingAs($user, 'api')
-			->json('GET', '/api/users');
+			->json('GET', $this->baseUrl);
 
 		$response
 			->assertStatus(200)
@@ -40,7 +42,7 @@ class UserTest extends TestCase
 	{
 		$user = factory(User::class)->create();
 		$response = $this->actingAs($user, 'api')
-			->json('GET', '/api/users/' . $user->id);
+			->json('GET', $this->baseUrl . '/' . $user->id);
 
 		$response
 			->assertStatus(200)
@@ -52,11 +54,11 @@ class UserTest extends TestCase
 		$user = factory(User::class)->create();
 		$anotherUser = factory(User::class)->create();
 		$response = $this->actingAs($user, 'api')
-			->json('GET', '/api/users/' . $anotherUser->id);
+			->json('GET', $this->baseUrl . '/' . $anotherUser->id);
 
 		$response
-			->assertStatus(401)
-			->assertJson(['error' => 'Must be Admin.']);
+			->assertStatus(403)
+			->assertJson(['message' => 'This action is unauthorized.']);
 	}
 
 	public function testShowWithAdmin()
@@ -66,7 +68,7 @@ class UserTest extends TestCase
 		]);
 		$anotherUser = factory(User::class)->create();
 		$response = $this->actingAs($user, 'api')
-			->json('GET', '/api/users/' . $anotherUser->id);
+			->json('GET', $this->baseUrl . '/' . $anotherUser->id);
 
 		$response
 			->assertStatus(200)
@@ -80,7 +82,7 @@ class UserTest extends TestCase
 			'user_id' => $user->id
 		]);
 		$response = $this->actingAs($user, 'api')
-			->json('GET', '/api/users/' . $user->id . '/todos');
+			->json('GET', $this->baseUrl . '/' . $user->id . '/todos');
 
 		$response
 			->assertStatus(200)
@@ -92,11 +94,11 @@ class UserTest extends TestCase
 		$user = factory(User::class)->create();
 		$anotherUser = factory(User::class)->create();
 		$response = $this->actingAs($user, 'api')
-			->json('GET', '/api/users/' . $anotherUser->id . '/todos');
+			->json('GET', $this->baseUrl . '/' . $anotherUser->id . '/todos');
 
 		$response
-			->assertStatus(401)
-			->assertJson(['error' => 'Must be Admin.']);
+			->assertStatus(403)
+			->assertJson(['message' => 'This action is unauthorized.']);
 	}
 
 	public function testShowTodosWithAdmin()
@@ -109,10 +111,62 @@ class UserTest extends TestCase
 			'user_id' => $anotherUser->id
 		]);
 		$response = $this->actingAs($user, 'api')
-			->json('GET', '/api/users/' . $anotherUser->id . '/todos');
+			->json('GET', $this->baseUrl . '/' . $anotherUser->id . '/todos');
 
 		$response
 			->assertStatus(200)
 			->assertJson([$todo->toArray()]);
+	}
+
+	public function testStoreWithMissingParams()
+	{
+		$user = factory(User::class)->create();
+		$response = $this->actingAs($user, 'api')
+			->json('POST', $this->baseUrl);
+
+		$response
+			->assertStatus(400);
+	}
+
+	public function testStoreWithValidParams()
+	{
+		$user = factory(User::class)->create();
+		$anotherUser = factory(User::class)->make();
+
+		$response = $this->actingAs($user, 'api')
+			->json('POST', $this->baseUrl, ['name' => $anotherUser->name, 'email' => $anotherUser->email, 'password' => 'secret']);
+
+		$response
+			->assertStatus(201)
+			->assertJson(['name' => $anotherUser->name, 'email' => $anotherUser->email]);
+	}
+
+	public function testUpdate()
+	{
+		$user = factory(User::class)->create([
+			'is_admin' => true,
+		]);
+		$anotherUser = factory(User::class)->create();
+
+		$response = $this->actingAs($user, 'api')
+			->json('PUT', $this->baseUrl . '/' . $anotherUser->id, ['name' => 'baconbaconbacon']);
+
+		$response
+			->assertStatus(200)
+			->assertJson(['name' => 'baconbaconbacon', 'email' => $anotherUser->email]);
+	}
+
+	public function testDelete()
+	{
+		$user = factory(User::class)->create([
+			'is_admin' => true,
+		]);
+		$anotherUser = factory(User::class)->create();
+
+		$response = $this->actingAs($user, 'api')
+			->json('DELETE', $this->baseUrl .'/' . $anotherUser->id);
+
+		$response
+			->assertStatus(204);
 	}
 }
