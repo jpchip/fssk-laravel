@@ -14,10 +14,12 @@ class TodoController extends Controller
 	 * Returns all todos if current user is admin, otherwise
 	 * just list of todos the current user has ownership of.
 	 *
+	 * @throws \Illuminate\Auth\Access\AuthorizationException
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index()
 	{
+		$this->authorize('all', Todo::class);
 		$user = Auth::user();
 		if($user->is_admin) {
 			return Todo::all();
@@ -48,10 +50,12 @@ class TodoController extends Controller
 	/**
 	 * Returns single Todo
 	 * @param  \App\Todo  $todo
+	 * @throws \Illuminate\Auth\Access\AuthorizationException
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show(Todo $todo)
 	{
+		$this->authorize('view', $todo);
 		return response()->json($todo);
 	}
 
@@ -59,10 +63,12 @@ class TodoController extends Controller
 	 * Updates Todo
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  \App\Todo  $todo
+	 * @throws \Illuminate\Auth\Access\AuthorizationException
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(Request $request, Todo $todo)
 	{
+		$this->authorize('update', $todo);
 		$todo->update($request->all());
 
 		return response()->json($todo, 200);
@@ -72,10 +78,12 @@ class TodoController extends Controller
 	 * Deletes Todo
 	 * @param  \App\Todo  $todo
 	 * @throws \Exception
+	 * @throws \Illuminate\Auth\Access\AuthorizationException
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy(Todo $todo)
 	{
+		$this->authorize('delete', $todo);
 		$todo->delete();
 		return response()->json(null, 204);
 	}

@@ -139,22 +139,34 @@ $this->call(TodosTableSeeder::class);
 
 ## How to make a new API endpoint
 
-1. Make Model and DB Migration:
+- Make Model and DB Migration:
 
 ```
 php artisan make:model Todo -m
 ```
 
-2. Make Controller:
+-  Make Controller:
 
 ```
 php artisan make:controller TodoController --resource --model=Todo
 ```
 
-3. Add Routes
+-  Add Routes
 
 ```
 Route::apiResource('todos', 'TodoController');
+```
+
+-  Add Authorization Policies:
+
+```
+php artisan make:policy TodoPolicy --model=Todo
+```
+
+Register policy in `AuthServiceProvider`:
+
+```
+Todo::class => TodoPolicy::class,
 ```
 
 ## Licensing
