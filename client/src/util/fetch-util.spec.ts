@@ -15,7 +15,7 @@ describe("fetchUtil", () => {
 
 			const def: RequestInit = {
 				method: "GET",
-				headers: headers,
+				headers,
 				credentials: "include",
 			};
 			const request = requestHandler(url);
@@ -32,7 +32,7 @@ describe("fetchUtil", () => {
 
 			const def: RequestInit = {
 				method: "GET",
-				headers: headers,
+				headers,
 				cache: "default",
 				credentials: "include",
 			};
@@ -58,7 +58,7 @@ describe("fetchUtil", () => {
 			};
 			const post: RequestInit = {
 				method: "POST",
-				headers: headers,
+				headers,
 				body: JSON.stringify(data),
 				credentials: "include",
 			};
@@ -78,7 +78,7 @@ describe("fetchUtil", () => {
 
 			const def: RequestInit = {
 				method: "GET",
-				headers: headers,
+				headers,
 				credentials: "include",
 			};
 
