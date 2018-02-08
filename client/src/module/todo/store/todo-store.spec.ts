@@ -36,8 +36,7 @@ describe("TodoStore", () => {
 		it("should report service errors", () => {
 			fetchMock.post("*", {
 				status: 418,
-				statusCode: 418,
-				headers: new Headers({"Content-Type":  "application/json"}),
+				headers: {"Content-Type":  "application/json"},
 				body: {code: 418, message: "I'm a little teapot"},
 			});
 			const consoleErrorSpy = spyOn(console, "error");
