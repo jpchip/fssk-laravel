@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import LoginContainer from "../../authentication/container/login-container";
 import RegisterContainer from "../../authentication/container/register-container";
 import TodoContainer from "../../todo/container/todo-container";
-import AuthStore from "../../authentication/store/auth-store";
 import ProtectedRouteContainer from "./protected-route-container";
 
 
