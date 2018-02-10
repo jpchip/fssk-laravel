@@ -1,18 +1,23 @@
 
 # FSSK - Laravel
-> Full Stack Starter Kit Playground
+> Full Stack Starter Kit Laravel Playground
 
-Full Stack Starter Kit, but usiing PHP/Laravel for server instead of Node.
+Full Stack Starter Kit, but using PHP/Laravel for server instead of Node.
 
 ## Installing / Getting started
 
-Copy `server/.env.example` to `server/.env` and `client/.env.example` to `client/.env`
+First, clone the project. Copy `server/.env.example` to `server/.env` and `client/.env.example` to `client/.env`
 
-Run the following:
+Run the following command:
 
 ```shell
 docker compose up -d
 ```
+
+This will first build the image based off the project's `Dockerfile`.  After the image is built, it will start and the current working directory will be mounted to the app container's `/opt/src`.
+
+This spins up a postgres instance, starts client at `http://localhost:3000`
+and starts server at `http://localhost:4000`. Server calls are proxied, so `http://localhost:3000/api/users` will hit `http://localhost:4000/api/users` automagically.
 
 To init the database:
 
@@ -20,14 +25,12 @@ To init the database:
 docker exec -it server php server/artisan migrate --seed
 ```
 
-This spins up a postgres instance, starts client at http://localhost:3000 
-and starts server at http://localhost:4000. Server calls are proxied, so http://localhost:3000/api/users will hit http://localhost:4000/api/users automagically.
 
 ## Developing
 
 ### Built With
 
-The current technologies used by fssk are as follows:
+The current technologies used by the starter kit are as follows:
 
 | Type | Selected Technology | Reasoning |
 | ---- | ------------------- | --------- |
@@ -39,9 +42,9 @@ The current technologies used by fssk are as follows:
 | Data Mapping Framework | [Eloquent ORM](https://laravel.com/docs/5.5/eloquent) | Included with Laravel |
 | Database Migrations | [Laravel Migrations](https://laravel.com/docs/5.5/migrations) | Provided by Laravel, so no additional dependencies |
 | Data Store | [PostgreSQL](https://www.postgresql.org/) | Open source, rock solid, industry standard |
-| Package Manager | [npm](https://www.npmjs.com/) | The battle-tested choice for node development |
+| Package Manager | [npm](https://www.npmjs.com/) / [composer](https://getcomposer.org/) | The battle-tested choices for node/php development |
 | Containerization | [Docker](https://www.docker.com/) | Containers make deployment easy |
-| Testing Framework | [Jest](https://facebook.github.io/jest/) | Complete testing package with an intuitive syntax |
+| Testing Framework | [Jest](https://facebook.github.io/jest/)  / [PHPUnit](https://phpunit.de/) | Complete testing package with an intuitive syntax |
 | Linter | [tslint](https://github.com/palantir/tslint) | Keeps your TypeScript code consistent |
 
 ### Prerequisites
@@ -92,7 +95,7 @@ cd server && ./vendor/bin/phpunit
 
 ## Artisan
 
-Laravel has a CLI tool called Artisan. To use it:
+Laravel has a CLI tool called [Artisan](https://laravel.com/docs/5.5/artisan). To use it:
 
 ```shell
 docker exec -it server php server/artisan YOUR_COMMAND
@@ -100,44 +103,7 @@ docker exec -it server php server/artisan YOUR_COMMAND
 
 Do `list` to see available commands.
 
-## Style guide
-
-TBD
-
-## Api Reference
-
-TBD
-
-## Database
-
-Using postgres v9.6. For local development, database runs in docker container. `server/database` contains int script, migrations, and seeds.
-
-Run migrations:
-
-```shell
-php artisan migrate
-```
-
-Run seeds:
-
-```shell
-php artisan db:seed
-```
-
-#### Create new seeds:
-
-```shell
-php artisan make:seeder TodosTableSeeder
-```
-
-Add it to `DatabaseSeeder.php`:
-
-```
-$this->call(TodosTableSeeder::class);
-```
-
-
-## How to make a new API endpoint
+### How to make a new API endpoint
 
 - Make Model and DB Migration:
 
@@ -167,6 +133,45 @@ Register policy in `AuthServiceProvider`:
 
 ```
 Todo::class => TodoPolicy::class,
+```
+
+
+## Style guide
+
+TBD
+
+## Api Reference
+
+TBD
+
+## Database
+
+Using postgres v9.6. For local development, database runs in docker container. `server/database` contains init script, migrations, and seeds.
+
+You can connect to the database with your favorite client at `localhost:5432`!
+
+#### Run migrations:
+
+```shell
+php artisan migrate
+```
+
+#### Run seeds:
+
+```shell
+php artisan db:seed
+```
+
+#### Create new seeds:
+
+```shell
+php artisan make:seeder TodosTableSeeder
+```
+
+Add it to `DatabaseSeeder.php`:
+
+```
+$this->call(TodosTableSeeder::class);
 ```
 
 ## Licensing
