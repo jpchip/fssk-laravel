@@ -22,6 +22,7 @@
   "scripts": {
     "prestart": "npm install",
     "start": "react-scripts-ts start",
+    "prebuild": "npm install",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
