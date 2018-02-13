@@ -11,6 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+if (App::environment('local')) {
+	Route::get('/', function () {
+		return view('welcome');
+	});
+} else {
+	Route::get('/', function () {
+		return File::get(public_path() . '/client/index.html');
+	});
+}
