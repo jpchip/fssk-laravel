@@ -16,7 +16,8 @@ if (App::environment('local')) {
 		return view('welcome');
 	});
 } else {
-	Route::get('/', function () {
+	//in production, route all web (aka not /api) calls to the root
+	Route::get('/{action}', function () {
 		return File::get(public_path() . '/client/index.html');
-	});
+	})->where('action', '(.*)');
 }

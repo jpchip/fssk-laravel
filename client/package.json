@@ -6,7 +6,7 @@
     "node": ">= 8.9.4"
   },
   "proxy": "http://server",
-  "homepage": "./client",
+  "homepage": "/client",
   "dependencies": {
     "autobind-decorator": "2.1.0",
     "classnames": "2.2.5",
