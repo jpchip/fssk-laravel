@@ -11,6 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+if (App::environment('local')) {
+	Route::get('/', function () {
+		return view('welcome');
+	});
+} else {
+	//in production, route all web (aka not /api) calls to the root
+	Route::get('/{action}', function () {
+		return File::get(public_path() . '/client/index.html');
+	})->where('action', '(.*)');
+}

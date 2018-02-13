@@ -2,7 +2,7 @@ import {observer} from "mobx-react";
 import * as React from "react";
 import FormInput from "../../common/component/form-input-component";
 import TodoModel, {ITodoModelProps} from "../model/todo-model";
-import * as autoBind from "auto-bind";
+import autobind from "autobind-decorator";
 
 interface ITodoItemComponentProps {
 	todo: TodoModel;
@@ -29,7 +29,6 @@ export default class TodoItemComponent extends React.Component<ITodoItemComponen
 			editable: props.todo.title ? false : true,
 			title: props.todo.title,
 		};
-		autoBind(this);
 	}
 
 	public render() {
@@ -94,18 +93,22 @@ export default class TodoItemComponent extends React.Component<ITodoItemComponen
 		}
 	}
 
+	@autobind
 	private toggleCompleted() {
 		this.props.updateTodo(this.props.todo, {completed: !this.props.todo.completed});
 	}
 
+	@autobind
 	private enableEditing() {
 		this.setState({ editable: true });
 	}
 
+	@autobind
 	private deleteTodo() {
 		this.props.deleteTodo(this.props.todo);
 	}
 
+	@autobind
 	private updateTodo() {
 		if (!this.state.title) {
 			this.props.saveTodo(this.props.todo);
@@ -118,6 +121,7 @@ export default class TodoItemComponent extends React.Component<ITodoItemComponen
 		});
 	}
 
+	@autobind
 	private cancelUpdateTodo() {
 		if (!this.state.title) {
 			this.props.cancelAdd();

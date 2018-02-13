@@ -55,25 +55,33 @@ The current technologies used by the starter kit are as follows:
 
 See Getting Started section for steps.
 
+Once spun up, you can shell into the client or server instances like:
+
+```shell
+docker exec -it client bash
+```
+
+```shell
+docker exec -it server bash
+```
+
 ### Building
 
 Build client side code:
 
 ```shell
-cd server/ && npm run build
+cd client/ && npm run build
 ```
-
-A production Docker build is coming soon.
 
 ### Deploying / Publishing
 
-Not there yet, but eventually:
+Update your `.env` files to indicate a production build, like `NODE_ENV=production` and `APP_ENV=production`. 
 
 ```shell
 docker-compose -f docker-compose-prod.yml up
 ```
 
-Will build the client code, spin up the server in a docker instance with / pointing to client's index.html.
+Will build the client code, spin up the server in a docker instance with `http://localhost:4000/` pointing to the client's index.html and built js/css.
 
 ## Configuration
 
