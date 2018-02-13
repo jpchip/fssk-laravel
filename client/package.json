@@ -6,8 +6,9 @@
     "node": ">= 8.9.4"
   },
   "proxy": "http://server",
+  "homepage": "./client",
   "dependencies": {
-    "auto-bind": "1.2.0",
+    "autobind-decorator": "2.1.0",
     "classnames": "2.2.5",
     "mobx": "3.5.1",
     "mobx-react": "4.4.1",
