@@ -11,7 +11,7 @@ First, clone the project. Copy `server/.env.example` to `server/.env` and `clien
 Run the following command:
 
 ```shell
-docker compose up -d
+docker-compose up -d
 ```
 
 This will first build the image based off the project's `Dockerfile`.  After the image is built, it will start and the current working directory will be mounted to the app container's `/opt/src`.
