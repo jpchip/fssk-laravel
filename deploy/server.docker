@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y wget git zip postgresql postgresql-cont
     && docker-php-ext-install -j$(nproc) mcrypt pdo pdo_pgsql
 
 COPY ./deploy/vhost /etc/apache2/sites-enabled/000-default.conf
-COPY ./deploy/entrypoint.sh /entrypoint.sh
+COPY ./deploy/server-entrypoint.sh /server-entrypoint.sh
 
 RUN wget -q 'https://getcomposer.org/installer' -O - | php; \
     mv composer.phar /usr/local/bin/composer;
