@@ -86,7 +86,7 @@ Will build the client code, spin up the server in a docker instance with `http:/
 Next, you should generate a new application key for the production environment:
 
 ```shell
-docker exec -it server php artisan key:generate
+docker exec -it server php server/artisan key:generate
 ```
 
 And run the database migrations:
