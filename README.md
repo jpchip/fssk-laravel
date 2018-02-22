@@ -83,6 +83,18 @@ docker-compose -f docker-compose-prod.yml up
 
 Will build the client code, spin up the server in a docker instance with `http://localhost:4000/` pointing to the client's index.html and built js/css.
 
+Next, you should generate a new application key for the production environment:
+
+```shell
+docker exec -it server php server/artisan key:generate
+```
+
+And run the database migrations:
+
+```shell
+docker exec -it server php server/artisan migrate
+```
+
 ## Configuration
 
 See the .env.example files in client and server directories.
