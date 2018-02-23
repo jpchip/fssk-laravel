@@ -95,6 +95,8 @@ And run the database migrations:
 docker exec -it server php server/artisan migrate
 ```
 
+To eek out best performance, should also run `php server/artisan config:cache` and `php server/artisan route:cache`, and make sure `APP_DEBUG` is false.
+
 ## Configuration
 
 See the .env.example files in client and server directories.
