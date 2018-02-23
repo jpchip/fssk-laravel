@@ -10,10 +10,6 @@ services:
     command: 'apache2-foreground'
     ports:
       - '4000:80'
-    volumes:
-      - './:/var/www'
-      - './deploy/server-entrypoint.sh:/server-entrypoint.sh'
-      - './deploy/php.ini:/usr/local/etc/php/php.ini'
     depends_on:
       - db
       - client
