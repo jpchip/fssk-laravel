@@ -11,7 +11,7 @@ First, clone the project. Copy `server/.env.example` to `server/.env` and `clien
 Run the following command:
 
 ```shell
-docker compose up -d
+docker-compose up -d
 ```
 
 This will first build the image based off the project's `Dockerfile`.  After the image is built, it will start and the current working directory will be mounted to the app container's `/opt/src`.
@@ -82,6 +82,18 @@ docker-compose -f docker-compose-prod.yml up
 ```
 
 Will build the client code, spin up the server in a docker instance with `http://localhost:4000/` pointing to the client's index.html and built js/css.
+
+Next, you should generate a new application key for the production environment:
+
+```shell
+docker exec -it server php server/artisan key:generate
+```
+
+And run the database migrations:
+
+```shell
+docker exec -it server php server/artisan migrate
+```
 
 ## Configuration
 
