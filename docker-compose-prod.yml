@@ -7,13 +7,10 @@ services:
     hostname: 'server'
     container_name: 'server'
     entrypoint: /server-entrypoint.sh
+    env_file: ./server/.env
     command: 'apache2-foreground'
     ports:
       - '4000:80'
-    volumes:
-      - './:/var/www'
-      - './deploy/server-entrypoint.sh:/server-entrypoint.sh'
-      - './deploy/php.ini:/usr/local/etc/php/php.ini'
     depends_on:
       - db
       - client
@@ -28,6 +25,7 @@ services:
       dockerfile: deploy/client.docker
     hostname: 'client'
     container_name: 'client'
+    env_file: ./client/.env
     command: 'npm run build'
     volumes:
       - './client:/opt/src'
