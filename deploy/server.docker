@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y wget git zip postgresql postgresql-cont
 COPY ./deploy/vhost /etc/apache2/sites-enabled/000-default.conf
 COPY ./deploy/server-entrypoint.sh /server-entrypoint.sh
 
+COPY ./ /var/www
+
 RUN wget -q 'https://getcomposer.org/installer' -O - | php; \
     mv composer.phar /usr/local/bin/composer;
 

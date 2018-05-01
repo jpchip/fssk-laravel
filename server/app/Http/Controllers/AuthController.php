@@ -69,7 +69,7 @@ class AuthController extends Controller
 
 
 		if (Auth::guard('api')->attempt(['email' => $input['email'], 'password' => $input['password']])) {
-			return response()->json(Auth::guard('api')->user());
+			return response()->json(['user' => Auth::guard('api')->user()]);
 		}
 
 		return response()->json(['error' => 'log in failed.'], 401);
